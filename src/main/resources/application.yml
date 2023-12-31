@@ -1,0 +1,8 @@
+server:
+  port: 8081
+
+
+api:
+  url: https://exercisedb.p.rapidapi.com/exercises
+  key: 60265c70e1msh39858fe1d5747b9p11aae0jsn45ae76420f88
+  host: exercisedb.p.rapidapi.com
