@@ -13,6 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("exercises")
 @AllArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
