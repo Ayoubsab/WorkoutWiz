@@ -1,3 +1,75 @@
 
-<!--<mat-paginator [length]="200" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
-</mat-paginator> -->
+<mat-paginator #paginator (page)="handlePageEvent($event)" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
+</mat-paginator>
+
+  
+<div class="container">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-3">
+        <!-- Filters -->
+        <!-- Bodyparts -->
+        <div class="mb-4">
+          <h4>Bodyparts</h4>
+          <ul class="list-unstyled">
+            <!-- Checkbox inputs for bodyparts -->
+
+            <li *ngFor="let part of bodyParts">
+                <label>
+                  <input type="checkbox" [(ngModel)]="checked[part]" (change)="filterBodyParts(part)"> {{part}}
+                </label>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Equipment -->
+        <div class="mb-4">
+          <h4>Equipment</h4>
+          <ul class="list-unstyled">
+            <!-- Checkbox inputs for equipment -->
+          </ul>
+        </div>
+  
+        <!-- Muscle -->
+        <div>
+          <h4>Muscle</h4>
+          <ul class="list-unstyled">
+            <!-- Checkbox inputs for muscle -->
+          </ul>
+        </div>
+      </div>
+  
+      <!-- Main content area -->
+      <div class="col-lg-9">
+        <!-- Grid layout for images -->
+        
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <!-- Repeat *ngFor loop for each image -->
+            <ng-container *ngIf="filteredExercises.length == 0">
+                <div class="col" *ngFor="let ex of exercises">
+                    <div class="card">
+                        <img [src]="ex.gifUrl" class="card-img-top" [alt]="ex.name">
+                        <div class="card-body">
+                        <p class="card-text">{{ ex.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            
+            <ng-container *ngIf="filteredExercises.length != 0">
+                <div class="col" *ngFor="let ex of filteredExercises">
+                    <div class="card">
+                        <img [src]="ex.gifUrl" class="card-img-top" [alt]="ex.name">
+                        <div class="card-body">
+                        <p class="card-text">{{ ex.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
