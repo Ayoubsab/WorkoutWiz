@@ -1,6 +1,4 @@
 
-<mat-paginator #paginator (page)="handlePageEvent($event)" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
-</mat-paginator>
 
   
 <div class="container">
@@ -46,25 +44,33 @@
         <div class="row row-cols-1 row-cols-md-4 g-4">
             <!-- Repeat *ngFor loop for each image -->
             <ng-container *ngIf="filteredExercises.length == 0">
-                <div class="col" *ngFor="let ex of exercises">
+                <div class="col" *ngFor="let i of   listIndices">
                     <div class="card">
-                        <img [src]="ex.gifUrl" class="card-img-top" [alt]="ex.name">
+                        <img [src]="exercises[pageSize * pageIndex + i].gifUrl" class="card-img-top" [alt]="exercises[pageSize * pageIndex + i].name">
                         <div class="card-body">
-                        <p class="card-text">{{ ex.name }}</p>
+                        <p class="card-text">{{exercises[pageSize * pageIndex + i].name }}</p>
                         </div>
                     </div>
                 </div>
+
+                <mat-paginator #paginator (page)="handlePageEvent($event)" [length]="exercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
+                </mat-paginator>
+                
             </ng-container>
             
             <ng-container *ngIf="filteredExercises.length != 0">
-                <div class="col" *ngFor="let ex of filteredExercises">
+                <div class="col" *ngFor="let i of listIndices">
                     <div class="card">
-                        <img [src]="ex.gifUrl" class="card-img-top" [alt]="ex.name">
+                        <img [src]="filteredExercises[pageSize * pageIndex + i].gifUrl" class="card-img-top" [alt]="filteredExercises[pageSize * pageIndex + i].name">
                         <div class="card-body">
-                        <p class="card-text">{{ ex.name }}</p>
+                        <p class="card-text">{{ filteredExercises[pageSize * pageIndex + i].name }}</p>
                         </div>
                     </div>
                 </div>
+
+                <mat-paginator #paginator (page)="handlePageEvent($event)" [length]="filteredExercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
+                </mat-paginator>
+                
             </ng-container>
 
 

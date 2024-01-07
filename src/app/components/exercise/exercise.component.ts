@@ -27,20 +27,25 @@ export class ExerciseComponent implements OnInit{
   selectedMuscle = '';
   isSubmitted = false;
   filteredExercises:Exercise[] =[]
-
   checked:{[part:string]: boolean}= {}
+
 
   length = 100;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
+  listIndices:number[] = [0,1,2,3,4,5,6,7,8,9]
 
   pageEvent: PageEvent = new PageEvent();
 
   handlePageEvent(e: PageEvent) {
     this.pageEvent = e;
     this.length = e.length;
-    this.pageSize = e.pageSize;
+    if (this.pageSize != e.pageSize){
+      this.pageSize = e.pageSize;
+      this.listIndices = [...Array(this.pageSize).keys()]
+    }
+    
     this.pageIndex = e.pageIndex;
     console.log(this.pageIndex)
   }
