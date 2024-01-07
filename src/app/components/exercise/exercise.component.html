@@ -25,6 +25,11 @@
           <h4>Equipment</h4>
           <ul class="list-unstyled">
             <!-- Checkbox inputs for equipment -->
+            <li *ngFor="let eq of equipments">
+                <label>
+                  <input type="checkbox" [(ngModel)]="checked[eq]" (change)="filterEquipments(eq)"> {{eq}}
+                </label>
+            </li>
           </ul>
         </div>
   
@@ -33,6 +38,11 @@
           <h4>Muscle</h4>
           <ul class="list-unstyled">
             <!-- Checkbox inputs for muscle -->
+            <li *ngFor="let m of muscles">
+                <label>
+                  <input type="checkbox" [(ngModel)]="checked[m]" (change)="filterMuscles(m)"> {{m}}
+                </label>
+            </li>
           </ul>
         </div>
       </div>
@@ -40,11 +50,17 @@
       <!-- Main content area -->
       <div class="col-lg-9">
         <!-- Grid layout for images -->
+
+        <mat-paginator *ngIf="filteredExercises.length == 0" #paginator (page)="handlePageEvent($event)" [length]="exercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
+        </mat-paginator>
+
+        <mat-paginator *ngIf="filteredExercises.length != 0" #paginator (page)="handlePageEvent($event)" [length]="filteredExercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
+        </mat-paginator>
         
         <div class="row row-cols-1 row-cols-md-4 g-4">
             <!-- Repeat *ngFor loop for each image -->
             <ng-container *ngIf="filteredExercises.length == 0">
-                <div class="col" *ngFor="let i of   listIndices">
+                <div class="col" *ngFor="let i of listIndices">
                     <div class="card">
                         <img [src]="exercises[pageSize * pageIndex + i].gifUrl" class="card-img-top" [alt]="exercises[pageSize * pageIndex + i].name">
                         <div class="card-body">
@@ -53,8 +69,7 @@
                     </div>
                 </div>
 
-                <mat-paginator #paginator (page)="handlePageEvent($event)" [length]="exercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
-                </mat-paginator>
+                
                 
             </ng-container>
             
@@ -68,8 +83,7 @@
                     </div>
                 </div>
 
-                <mat-paginator #paginator (page)="handlePageEvent($event)" [length]="filteredExercises.length" [pageSizeOptions]="[10, 50, 100]" aria-label="Select page">
-                </mat-paginator>
+                
                 
             </ng-container>
 

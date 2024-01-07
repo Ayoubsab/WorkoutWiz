@@ -32,4 +32,12 @@ export class ExerciseService {
   public getExerciseByBodyPart(bodyPart:string){
     return this.http.get<Exercise[]>(`${this.API_URL}/exercises/bodyPart/${bodyPart}`)
   }
+
+  public getExerciseByEquipment(equipment:string){
+    return this.http.get<Exercise[]>(`${this.API_URL}/exercises/equipment/${equipment}`)
+  }
+
+  public getExerciseByMuscle(muscle:string){
+    return this.http.get<Exercise[]>(`${this.API_URL}/exercises/target/${muscle}`)
+  }
 }

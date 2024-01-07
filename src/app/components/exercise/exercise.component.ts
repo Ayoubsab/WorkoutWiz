@@ -62,8 +62,8 @@ export class ExerciseComponent implements OnInit{
   ngOnInit(): void {
     this.getExercises()
     this.getBodyParts()
-    //this.getEquipmentList()
-    //this.getMusclesList()
+    this.getEquipmentList()
+    this.getMusclesList()
     console.log(this.bodyParts)
   }
 
@@ -113,42 +113,66 @@ export class ExerciseComponent implements OnInit{
 
   public getExerciseByBodyPart(bodyPart:string){
     this.exerciseService.getExerciseByBodyPart(bodyPart).subscribe(response =>{
-      response.forEach(el => {
-        this.filteredExercises.push(el)
-      })
+      this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
     })
   }
+
+  public getExerciseByEquipment(equipment:string){
+    this.exerciseService.getExerciseByEquipment(equipment).subscribe(response =>{
+      this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
+    })
+  }
+
+  public getExerciseByMuscle(muscle:string){
+    this.exerciseService.getExerciseByMuscle(muscle).subscribe(response =>{
+      this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
+    })
+  }
+  
 
   filterBodyParts(bodyPart:string) {
     // Logic to filter images based on selected checkboxes for Bodyparts
     
     if (this.checked[bodyPart] == true){
-      console.log(bodyPart)
       this.getExerciseByBodyPart(bodyPart)
     }else{
-      
       this.filteredExercises = this.filteredExercises.filter(element => !element.bodyPart.includes(bodyPart));
+    }
+  }
 
+  filterEquipments(equipment:string) {
+    // Logic to filter images based on selected checkboxes for Bodyparts
+    
+    if (this.checked[equipment] == true){
+      this.getExerciseByEquipment(equipment)
+    }else{
+      
+      this.filteredExercises = this.filteredExercises.filter(element => !element.equipment.includes(equipment));
 
-      console.log(this.filteredExercises)
     }
 
-    console.log(this.checked, this.filteredExercises)
+  }
+
+  filterMuscles(muscle:string) {
+    // Logic to filter images based on selected checkboxes for Bodyparts
+    
+    if (this.checked[muscle] == true){
+      this.getExerciseByMuscle(muscle)
+    }else{
+      
+      this.filteredExercises = this.filteredExercises.filter(element => !element.target.includes(muscle));
+
+
+    }
+
   }
 
 
 
   
 
-  onSubmit(): void {
-    console.log(this.filterForm);
-    this.isSubmitted = true;
-    if (!this.filterForm.valid) {
-      false;
-    } else {
-      console.log(JSON.stringify(this.filterForm.value));
-    }
-  }
+  
+  
 
 
 }
