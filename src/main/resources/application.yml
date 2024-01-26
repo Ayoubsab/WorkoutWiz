@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+
+api:
+  url: https://exercisedb.p.rapidapi.com/exercises
+  key: 60265c70e1msh39858fe1d5747b9p11aae0jsn45ae76420f88
+  host: exercisedb.p.rapidapi.com
+
+
+keycloak:
+  cors: true
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            serverUrl: http://localhost:8080
+            client-id: workout-app
+            client-secret: 8KBSnWJ1IP0NJ6XU8fZD3qNnSAIqjKt3
+            authorization-grant-type: authorization_code
+            scope: openid
+
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/WorkoutApp
+            user-name-attribute: preferred_username
+
+
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/WorkoutApp
+          jwk-set-uri: http://localhost:8080/realms/WorkoutApp/protocol/openid-connect/certs
