@@ -3,8 +3,8 @@ import { FormBuilder } from '@angular/forms';
 import { ExerciseService } from 'src/app/service/exercise.service';
 import {PageEvent, MatPaginatorModule} from '@angular/material/paginator';
 import { Exercise } from 'src/app/models/exercise';
-import { ChildActivationStart } from '@angular/router';
-import { combineLatest } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ExerciseDetailComponent } from './exercise-detail/exercise-detail.component';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { combineLatest } from 'rxjs';
 })
 export class ExerciseComponent implements OnInit{
 
-  constructor(public fb: FormBuilder) {}
+  constructor(public fb: FormBuilder, public dialog: MatDialog) {}
 
   exerciseService:ExerciseService = inject(ExerciseService)
 
@@ -28,6 +28,10 @@ export class ExerciseComponent implements OnInit{
   isSubmitted = false;
   filteredExercises:Exercise[] =[]
   checked:{[part:string]: boolean}= {}
+  equipmentFilter:string[] = []
+  muscleFilter:string[] = []
+  bodyPartsFilter:string[] = []
+
 
 
   length = 100;
@@ -47,7 +51,7 @@ export class ExerciseComponent implements OnInit{
     }
     
     this.pageIndex = e.pageIndex;
-    console.log(this.pageIndex)
+    
   }
 
 
@@ -64,7 +68,6 @@ export class ExerciseComponent implements OnInit{
     this.getBodyParts()
     this.getEquipmentList()
     this.getMusclesList()
-    console.log(this.bodyParts)
   }
 
 
@@ -77,6 +80,7 @@ export class ExerciseComponent implements OnInit{
   public getBodyParts(){
     this.exerciseService.getBodyPartsList().subscribe(response => {
       this.bodyParts = response
+
     })
 
     this.bodyParts.forEach(element => {
@@ -89,7 +93,6 @@ export class ExerciseComponent implements OnInit{
   public getEquipmentList(){
     this.exerciseService.getEquipmentList().subscribe(response => {
       this.equipments = response
-      console.log(this.equipments)
     })
 
     this.equipments.forEach(element => {
@@ -114,59 +117,100 @@ export class ExerciseComponent implements OnInit{
   public getExerciseByBodyPart(bodyPart:string){
     this.exerciseService.getExerciseByBodyPart(bodyPart).subscribe(response =>{
       this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
+      this.filterExercises()
     })
   }
 
   public getExerciseByEquipment(equipment:string){
     this.exerciseService.getExerciseByEquipment(equipment).subscribe(response =>{
       this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
+      this.filterExercises()
     })
   }
 
   public getExerciseByMuscle(muscle:string){
     this.exerciseService.getExerciseByMuscle(muscle).subscribe(response =>{
       this.filteredExercises = Array.from(new Set([...this.filteredExercises, ...response]));
+      this.filterExercises()
     })
+
+    
   }
   
+  // Because we only call an api to get the list of exercices, and we can't store it in a database,
+  // We have to filter manually. We cannot use SQL request.
+
 
   filterBodyParts(bodyPart:string) {
     // Logic to filter images based on selected checkboxes for Bodyparts
     
-    if (this.checked[bodyPart] == true){
+    if (this.checked[bodyPart]){
+      this.bodyPartsFilter.push(bodyPart)
       this.getExerciseByBodyPart(bodyPart)
+      
     }else{
-      this.filteredExercises = this.filteredExercises.filter(element => !element.bodyPart.includes(bodyPart));
+      this.bodyPartsFilter = this.bodyPartsFilter.filter(bp => bp != bodyPart)
+      this.filterExercises()
     }
+
+
   }
 
   filterEquipments(equipment:string) {
     // Logic to filter images based on selected checkboxes for Bodyparts
     
-    if (this.checked[equipment] == true){
+    if (this.checked[equipment]){
+      this.equipmentFilter.push(equipment)
       this.getExerciseByEquipment(equipment)
-    }else{
       
-      this.filteredExercises = this.filteredExercises.filter(element => !element.equipment.includes(equipment));
-
+    }else{
+      this.equipmentFilter = this.equipmentFilter.filter(eq => eq != equipment)
+      this.filterExercises()
     }
+
 
   }
 
   filterMuscles(muscle:string) {
     // Logic to filter images based on selected checkboxes for Bodyparts
     
-    if (this.checked[muscle] == true){
-      this.getExerciseByMuscle(muscle)
+    if (this.checked[muscle]){
+      this.muscleFilter.push(muscle)
+      this.getExerciseByMuscle(muscle) 
+  
     }else{
-      
-      this.filteredExercises = this.filteredExercises.filter(element => !element.target.includes(muscle));
-
-
+      this.muscleFilter = this.muscleFilter.filter(m => m != muscle);
+      this.filterExercises()
     }
+
+    
+
+  }
+  public filterExercises() {
+
+    this.filteredExercises =  this.filteredExercises.filter(exercise => {
+
+        // Check if the exercise matches at least one equipment, body part, and targeted muscle
+        const matchesEquipment = this.equipmentFilter.length === 0 || this.equipmentFilter.includes(exercise.equipment);
+        const matchesBodyPart = this.bodyPartsFilter.length === 0 || this.bodyPartsFilter.includes(exercise.bodyPart);
+        const matchesTargetedMuscles = this.muscleFilter.length === 0 || this.muscleFilter.includes(exercise.target);
+
+        // Return true if the exercise matches at least one of each criteria
+        return matchesEquipment && matchesBodyPart && matchesTargetedMuscles;
+    });
 
   }
 
+
+  
+
+
+  openDialog(ex:Exercise) {
+    console.log("CLICKED")
+    this.dialog.open(ExerciseDetailComponent, {
+      data: ex
+    });
+  }
 
 
   
