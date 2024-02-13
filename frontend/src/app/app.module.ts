@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccountComponent } from './components/account/account.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ExerciseDetailComponent } from './components/exercise/exercise-detail/exercise-detail.component';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -32,6 +33,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
   declarations: [
     AppComponent,
     HomeComponent,
+    ExerciseDetailComponent,
   ],
   imports: [
     BrowserModule,

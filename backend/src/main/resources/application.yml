@@ -4,7 +4,7 @@ server:
 
 api:
   url: https://exercisedb.p.rapidapi.com/exercises
-  key: 60265c70e1msh39858fe1d5747b9p11aae0jsn45ae76420f88
+  key: ${API_KEY}
   host: exercisedb.p.rapidapi.com
 
 
@@ -19,7 +19,7 @@ spring:
           keycloak:
             serverUrl: http://localhost:8080
             client-id: workout-app
-            client-secret: 8KBSnWJ1IP0NJ6XU8fZD3qNnSAIqjKt3
+            client-secret: ${CLIENT_SECRET}
             authorization-grant-type: authorization_code
             scope: openid
 
